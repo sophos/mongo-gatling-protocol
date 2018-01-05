@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.lkishalmi.gatling:gradle-gatling-plugin:0.7.1"
+    }
+}
+
+plugins {
+    id 'com.github.lkishalmi.gatling' version '0.7.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Must use at least mongo 3.6.0 for bsonDocument.parse fixes
+    gatling group: 'org.mongodb', name: 'mongo-java-driver', version: '3.6.0'
+    gatling group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.2'
+    gatling group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.12', version: '2.9.2'
+}
+
+apply plugin: "com.github.lkishalmi.gatling"
+
+gatling {
+    toolVersion = '2.3.0'
+    jvmArgs = ['-server', '-XX:+UseThreadPriorities',
+               '-XX:ThreadPriorityPolicy=42',
+               '-Xms12G', '-Xmx12G', '-Xmn2G',
+               '-XX:+HeapDumpOnOutOfMemoryError',
+               '-XX:+AggressiveOpts',
+               '-XX:+OptimizeStringConcat',
+               '-XX:+UseFastAccessorMethods',
+               '-XX:+UseParNewGC',
+               '-XX:+UseConcMarkSweepGC',
+               '-XX:+CMSParallelRemarkEnabled',
+               '-Djava.net.preferIPv4Stack=true',
+               '-Djava.net.preferIPv6Addresses=false']
+}
